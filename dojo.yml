@@ -4,4 +4,4 @@ type: public
 award:
   emoji: 🛸
 modules:
-  - id: Zero Wing
+  - id: zero
