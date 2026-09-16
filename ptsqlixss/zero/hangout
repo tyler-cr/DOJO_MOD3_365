@@ -13,11 +13,10 @@ def a():
     return "WIP!"
 
 @app.route("/secret_meeting", methods=["GET"])
+@app.route("/secret_meeting/<path:path>", methods=["GET"])
 def b(path = "index.html"):
-    #for i in range(len(path)):
-    #    path[i] = chr(ord(path[i]) + 0x42)
-
-    return """<script>alert("In space, no one can hear you pwn...")</script>"""
+    for i in range(len(path)):
+        path[i] = chr(ord(path[i]) + 0x42)
     
     requested_path = app.root_path + "/tables/" + path[::-1]
     
