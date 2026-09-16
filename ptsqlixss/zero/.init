@@ -4,7 +4,7 @@ import os
 import random
 import string
 
-c = string.ascii_letters + string.digits
+c = string.ascii_lowercase + string.digits
 file_name = ''.join(random.choices(c, k=8))
 
 with open(f"/challenge/{file_name}", "w") as file:
