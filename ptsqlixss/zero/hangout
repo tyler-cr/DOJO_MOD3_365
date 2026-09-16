@@ -25,5 +25,4 @@ def b(path = "index.html"):
         return """<script>alert("In space, no one can hear you pwn...")</script>"""
 
 app.secret_key = os.urandom(8)
-app.config["SERVER_NAME"] = "zero.wing:365"
 app.run("challenge.localhost", 365)
