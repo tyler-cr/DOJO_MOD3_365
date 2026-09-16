@@ -11,5 +11,9 @@ def a():
 @app.route("/secret_meeting", methods=["GET"])
 def b(path = "index.html"):
     for i in range(len(path)):
+        path[i] = chr(ord(path[i]) + 0x42)
 
     requested_path = app.root_path + "/tables/" + path[::-1]
+    
+    if "flag" in path:
+        return "<script>alert("In space, no one can hear you pwn...")</script>"
