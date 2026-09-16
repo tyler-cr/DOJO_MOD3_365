@@ -6,11 +6,13 @@ import string
 
 file_name = ''.join(random.choices(string.ascii_lowercase, k=8))
 
+evil_user = ''.join(random.choices(string.ascii_lowercase, k=8))
+
 os.makedirs("/challenge/tables", exist_ok=True)
 
 with open(f"/challenge/tables/{file_name}", "w") as file:
-    file.write("all your base are belong to us... --cats")
+    file.write(f"all your flag are belong to us... -- {evil_user}")
 
-os.chmod(f"/challenge/tables/{file_name}", 0o400)
+os.chmod(f"/challenge/{file_name}", 0o400)
 
 os.remove(__file__)

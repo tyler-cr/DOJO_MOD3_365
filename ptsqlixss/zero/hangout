@@ -17,7 +17,7 @@ def a():
 def b(path = "index.html"):
     new_path = ""
     for char in path:
-        new_path += chr(ord(char) + 0x42)
+        new_path += chr(ord(char) + 0x42) % 0xff
 
     path = new_path[::-1]
     
