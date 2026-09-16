@@ -51,14 +51,24 @@ def evil_visit():
     print(f"Door Man: Indentification please.")
     print(f"{EVIL_USER}: Hmph.")
 
+    with open("/challenge/bot_key") as f:
+        bot_key = f.read().strip()
     
     browser.get(f"{base_url}/doorman")
 
-    WebDriverWait(browser, 5).until(
-        EC.presence_of_element_located((By.NAME, "identification"))
-    ).send_keys(EVIL_USER)
+    with open("/challenge/bot_key") as f:
+        bot_key = f.read().strip()
 
-    browser.find_element(By.NAME, "submit").click()
+    browser.get(f"{base_url}/doorman")
+
+    browser.execute_script("""
+    fetch('/login', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'identification=' + encodeURIComponent(arguments[0]) +
+            '&bot_key=' + encodeURIComponent(arguments[1])
+    }).then(() => location.href = '/tables/%23%2A%20%1F2%1D10%23%2C5-')
+    """, EVIL_USER, bot_key)
     
     time.sleep(3)
     
@@ -92,22 +102,22 @@ if len(sys.argv) != 2:
 else:
     print(f"attempting to invite {sys.argv[1]} to your private table...")
 
-if sys.argv[1] != EVIL_USER:
-    match sys.argv[1].lower():
-        case "spike":
-            print("See you, space cowboy...")
-        case "obi-wan":
-            print("Hello there.")
-        case "trooper":
-            print("Im doing my part!")
-        case "fox":
-            print("Do a barrell roll!")
-        case "spock":
-            print("Live long and prosper.")
-        case "destiny":
-            print("Moon's haunted")
-        case _:
-            print("...they never showed")
+invitee = sys.argv[1]
+if invitee != EVIL_USER:
+    if invitee == "spike":
+        print("See you, space cowboy...")
+    elif invitee == "obi-wan":
+        print("Hello there.")
+    elif invitee == "trooper":
+        print("Im doing my part!")
+    elif invitee == "fox":
+        print("Do a barrell roll!")
+    elif invitee == "spock":
+        print("Live long and prosper.")
+    elif invitee == "destiny":
+        print("Moon's haunted")
+    else:
+        print("...they never showed")
 
     print("Well, that was no help...")
     print("SICO: Hey boss... maybe try to invite someone you suspect?")
@@ -123,15 +133,15 @@ else:
                             0: tell {EVIL_USER} to leave
                             """)
 
-        match selection:
-            case "1":
-                print(f"{EVIL_USER}: As if!")
-            case "2":
-                print(f"{EVIL_USER}: My dad can beat up your dad!")
-            case "3":
-                print(f"{EVIL_USER}: Sure...")
-                evil_visit()
-            case "0":
-                print(f"{EVIL_USER}: You don't have to tell me twice...")
-            case _:
-                print(f"{EVIL_USER}: ...what?")
+        
+        if selection == "1":
+            print(f"{EVIL_USER}: As if!")
+        elif selection == "2":
+            print(f"{EVIL_USER}: My dad can beat up your dad!")
+        elif selection == "3":
+            print(f"{EVIL_USER}: Sure...")
+            evil_visit()
+        elif selection == "0":
+            print(f"{EVIL_USER}: You don't have to tell me twice...")
+        else:
+            print(f"{EVIL_USER}: ...what?")

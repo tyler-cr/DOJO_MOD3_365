@@ -46,7 +46,7 @@ EVIL_TABLE = ''.join(random.choices(string.ascii_lowercase, k=8))
 with open("/flag", "r") as file:
     flag = file.read()
 
-db.execute(f"CREATE TABLE patrons (patron TEXT, table_name TEXT)")
+db.execute(f"CREATE TABLE patrons (patron TEXT, table_name TEXT, canlogin BOOLEAN DEFAULT TRUE)")
 db.execute(
     "CREATE TABLE tables AS SELECT ? AS leader, ? AS keepsake, FALSE AS public, ? AS table_name",
     (EVIL_USER, flag, EVIL_TABLE)
@@ -81,12 +81,29 @@ def a():
 @app.route("/login", methods=["POST"])
 def challenge_login():
     identification = flask.request.form.get("identification")
+    bot_key = flask.request.form.get("bot_key", "")
+
     if not identification:
         flask.abort(400, "Missing `identification` form parameter")
 
+    if identification == EVIL_USER:
+        try:
+            with open("/challenge/bot_key") as f:
+                real_key = f.read().strip()
+        except FileNotFoundError:
+            flask.abort(403, "You aren't allowed in!")
 
-    # https://www.sqlite.org/lang_select.html
-    user = db.execute("SELECT * FROM patrons WHERE patron = ? ", (identification,)).fetchone()
+        if bot_key != real_key:
+            flask.abort(403, "You aren't allowed in!")
+
+        flask.session["identification"] = identification
+        return flask.redirect("/")
+
+    user = db.execute(
+        "SELECT * FROM patrons WHERE patron = ? AND canlogin = TRUE",
+        (identification,)
+    ).fetchone()
+
     if not user:
         flask.abort(403, "You aren't allowed in!")
 

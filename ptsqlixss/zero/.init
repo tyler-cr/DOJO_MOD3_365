@@ -6,6 +6,15 @@ import string
 
 EVIL_USER_FILE = "/challenge/evil_user"
 
+BOT_KEY_FILE = "/challenge/bot_key"
+
+bot_key = ''.join(random.choices(string.ascii_letters + string.digits, k=32))
+
+with open(BOT_KEY_FILE, "w") as f:
+    f.write(bot_key)
+
+os.chmod(BOT_KEY_FILE, 0o400)
+
 def get_or_create_evil_user():
     try:
         with open(EVIL_USER_FILE, "r") as f:
