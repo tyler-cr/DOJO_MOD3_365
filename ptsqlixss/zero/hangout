@@ -4,9 +4,13 @@ import flask
 import os
 app = flask.Flask(__name__)
 
+@app.route("/", methods = ["GET", "POST"])
+def x():
+    return "HEHEHOHO"
+
 @app.route("/docking_station", methods=["GET"])
 def a():
-    return
+    return "WIP!"
 
 @app.route("/secret_meeting", methods=["GET"])
 def b(path = "index.html"):
@@ -19,7 +23,7 @@ def b(path = "index.html"):
     
     if "flag" in path:
         return """<script>alert("In space, no one can hear you pwn...")</script>"""
-        
+
 app.secret_key = os.urandom(8)
 app.config["SERVER_NAME"] = "zero.wing:365"
-app.run("zero.wing", 365)
+app.run("challenge.localhost", 365)
