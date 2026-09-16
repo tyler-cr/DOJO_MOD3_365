@@ -1,10 +1,137 @@
 #!/usr/bin/exec-suid -- /usr/bin/python3 -I
-
+import os
+import string
+from urllib.parse import quote
 import sys
+import random
 from pwn import *
+import psutil
+import urllib
+import atexit
+import time
+
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException, WebDriverException
+
+EVIL_USER_FILE = "/challenge/evil_user"
+
+def get_or_create_evil_user():
+    try:
+        with open(EVIL_USER_FILE, "r") as f:
+            evil_user = f.read().strip()
+            if evil_user:
+                return evil_user
+    except FileNotFoundError:
+        pass
+
+    evil_user = ''.join(random.choices(string.ascii_lowercase, k=8))
+
+    with open(EVIL_USER_FILE, "w") as f:
+        f.write(evil_user)
+        os.chmod(EVIL_USER_FILE, 0o400)
+    return evil_user
+
+EVIL_USER = get_or_create_evil_user()
+os.makedirs("/challenge/tables", exist_ok=True)
+
+def evil_visit():
+    open_ports = { s.laddr.port for s in psutil.net_connections(kind="inet") if s.status == 'LISTEN' }
+    
+    if 365 not in open_ports:
+        print("You didn't open the_hangout!\n (run the server!)")
+        sys.exit(1)
+    
+    base_url = "http://challenge.localhost:365"
+    
+    print(f"Door Man: Indentification please.")
+    print(f"{EVIL_USER}: Hmph.")
+
+    
+    browser.get(f"{base_url}/doorman")
+
+    WebDriverWait(browser, 5).until(
+        EC.presence_of_element_located((By.NAME, "identification"))
+    ).send_keys(EVIL_USER)
+
+    browser.find_element(By.NAME, "submit").click()
+    
+    time.sleep(3)
+    
+    print("Door Man: Your good to go. Have a good one, boss.")
+    print(f"{EVIL_USER}: ...")
+
+    browser.get("http://challenge.localhost:365/tables/%23%2A%20%1F2%1D10%23%2C5-")
+    
+    time.sleep(3)
+
+    print(f"""\n[The creature walks into your room for a bit, not sure what 
+                it's looking at or why you invited it... it leaves shortly after]\n""")
+
+    print(f"Go see if your attack worked!")
+
+os.setuid(os.geteuid())
+os.environ.clear()
+os.environ["PATH"] = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+EVIL_USER = get_or_create_evil_user()
+
+options = FirefoxOptions()
+options.add_argument("--headless")
+service = FirefoxService(log_path="/dev/null")
+browser = webdriver.Firefox(service=service, options=options)
+atexit.register(browser.quit)
 
 if len(sys.argv) != 2:
     print("Houston, we have a problem...")
-
+    exit()
 else:
     print(f"attempting to invite {sys.argv[1]} to your private table...")
+
+if sys.argv[1] != EVIL_USER:
+    match sys.argv[1].lower():
+        case "spike":
+            print("See you, space cowboy...")
+        case "obi-wan":
+            print("Hello there.")
+        case "trooper":
+            print("Im doing my part!")
+        case "fox":
+            print("Do a barrell roll!")
+        case "spock":
+            print("Live long and prosper.")
+        case "destiny":
+            print("Moon's haunted")
+        case _:
+            print("...they never showed")
+
+    print("Well, that was no help...")
+    print("SICO: Hey boss... maybe try to invite someone you suspect?")
+    exit()
+else:
+    selection = -1
+    while selection != "0":
+        print(f"{EVIL_USER}: ...what do you want")
+        selection = input(f"""
+                            1: ask {EVIL_USER} for flag back politely\n
+                            2: ask {EVIL_USER} for flag back forcefully\n
+                            3: invite {EVIL_USER} into your private room\n
+                            0: tell {EVIL_USER} to leave
+                            """)
+
+        match selection:
+            case "1":
+                print(f"{EVIL_USER}: As if!")
+            case "2":
+                print(f"{EVIL_USER}: My dad can beat up your dad!")
+            case "3":
+                print(f"{EVIL_USER}: Sure...")
+                evil_visit()
+            case "0":
+                print(f"{EVIL_USER}: You don't have to tell me twice...")
+            case _:
+                print(f"{EVIL_USER}: ...what?")

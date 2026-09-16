@@ -1,19 +1,100 @@
 #!/usr/bin/exec-suid -- /usr/bin/python3 -I
 
+import random
 import flask
 import os
 app = flask.Flask(__name__)
+import sqlite3
+import tempfile
+import string
 
-@app.route("/", methods = ["GET", "POST"])
+EVIL_USER_FILE = "/challenge/evil_user"
+
+def get_or_create_evil_user():
+    try:
+        with open(EVIL_USER_FILE, "r") as f:
+            evil_user = f.read().strip()
+            if evil_user:
+                return evil_user
+    except FileNotFoundError:
+        pass
+
+    evil_user = ''.join(random.choices(string.ascii_lowercase, k=8))
+
+    with open(EVIL_USER_FILE, "w") as f:
+        f.write(evil_user)
+        os.chmod(EVIL_USER_FILE, 0o400)
+    return evil_user
+
+class TemporaryDB:
+    def __init__(self):
+        self.db_file = tempfile.NamedTemporaryFile("x", suffix=".db")
+
+    def execute(self, sql, parameters=()):
+        connection = sqlite3.connect(self.db_file.name)
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+        result = cursor.execute(sql, parameters)
+        connection.commit()
+        return result
+
+db = TemporaryDB()
+
+EVIL_USER = get_or_create_evil_user()
+EVIL_TABLE = ''.join(random.choices(string.ascii_lowercase, k=8))
+
+with open("/flag", "r") as file:
+    flag = file.read()
+
+db.execute(f"CREATE TABLE patrons (patron TEXT, table_name TEXT)")
+db.execute(
+    "CREATE TABLE tables AS SELECT ? AS leader, ? AS keepsake, FALSE AS public, ? AS table_name",
+    (EVIL_USER, flag, EVIL_TABLE)
+)
+db.execute(f"INSERT INTO patrons (patron, table_name) VALUES (?, ?)", (EVIL_USER, EVIL_TABLE))
+db.execute(f"INSERT INTO patrons (patron, table_name) VALUES (?, ?)", ("Tyler", "I_love_cse365"))
+
+for i in range(99):
+    rand_user = ''.join(random.choices(string.ascii_lowercase, k=8))
+    rand_table= ''.join(random.choices(string.ascii_lowercase, k=8))
+    keepsake = "pwn.college{"+''.join(random.choices(string.ascii_letters + string.digits + ".-_", k=8))+"}"
+    db.execute(
+    "INSERT INTO tables (leader, keepsake, public, table_name) VALUES (?, ?, TRUE, ?)",
+    (rand_user, keepsake, rand_table)
+    )
+    db.execute(f"INSERT INTO patrons (patron, table_name) VALUES (?, ?)", (rand_user, rand_table))
+
+@app.route("/deepspace", methods = ["GET", "POST"])
 def x():
-    return "HEHEHOHO"
+    return "Jebediah Kerman has entered orbit."
 
-@app.route("/docking_station", methods=["GET"])
+@app.route("/doorman", methods=["GET"])
 def a():
-    return "WIP!"
+    return """
+            The doorman required ID!
+            <form action=login method=post>
+              Identification:<input type=text name=identification>
+              <input type=submit name=submit value=Login>
+            </form><hr>
+    """
 
-@app.route("/secret_meeting", methods=["GET"])
-@app.route("/secret_meeting/<path:path>", methods=["GET"])
+@app.route("/login", methods=["POST"])
+def challenge_login():
+    identification = flask.request.form.get("identification")
+    if not identification:
+        flask.abort(400, "Missing `identification` form parameter")
+
+
+    # https://www.sqlite.org/lang_select.html
+    user = db.execute("SELECT * FROM patrons WHERE patron = ? ", (identification,)).fetchone()
+    if not user:
+        flask.abort(403, "You aren't allowed in!")
+
+    flask.session["identification"] = identification
+    return flask.redirect("/")
+
+@app.route("/tables", methods=["GET"])
+@app.route("/tables/<path:path>", methods=["GET"])
 def b(path = "index.html"):
     new_path = ""
     for char in path:
@@ -36,7 +117,87 @@ def b(path = "index.html"):
     except Exception as e:
         flask.abort(500, requested_path + ":" + str(e))
 
-    return """Jebediah Kerman has entered orbit."""
+@app.route("/", methods=["GET"])
+def inside():
+    return """this place sure is cool..."""
+
+@app.route("/make_table_public", methods=["POST"])
+def make_table_public():
+    if "identification" not in flask.session:
+        flask.abort(403, "Patron must be allowed in by doorman first!")
+
+    row = db.execute(
+        "SELECT table_name FROM patrons WHERE patron = ?",
+        (flask.session["identification"],)
+    ).fetchone()
+
+    if not row:
+        flask.abort(404)
+
+    db.execute(
+        "UPDATE tables SET public = TRUE WHERE table_name = ?",
+        (row["table_name"],)
+    )
+
+    return flask.redirect("/")
+
+@app.route("/look_for_tables", methods=["GET"])
+def look_for_table():
+    if "identification" not in flask.session:
+        flask.abort(403, "Patron must be allowed in by doorman first!")
+    table_info = db.execute("SELECT * FROM tables WHERE public = TRUE").fetchall()
+    
+    retstr = ""
+    for tables in table_info:
+        retstr += f"""<br> Table: {tables["table_name"]}, Leader: {tables["leader"]}"""
+    return retstr
+
+@app.route("/change_keepsake", methods=["GET", "POST"])
+def change_keepsake():
+    if "identification" not in flask.session:
+        flask.abort(403, "Patron must be allowed in by doorman first!")
+
+    page = """
+            <form action="/change_keepsake" method="post">
+              <textarea name=leader>Insert Leader ID!</textarea>
+              <textarea name=table>Insert Table ID!</textarea>
+              <textarea name=curkeep>Insert Current Keepsake!</textarea>
+              <textarea name=newkeep>Insert New Keepsake!</textarea>
+              <input type=submit value=Save>Change!
+            </form><br><a href=publish>Publish your drafts!</a><hr>
+        """
+
+    if flask.request.method == "POST":
+        leader = flask.request.form.get("leader", "")
+        table = flask.request.form.get("table", "")
+        curkeep = flask.request.form.get("curkeep", "")
+        newkeep = flask.request.form.get("newkeep", "")
+
+        # NOTE: IF YOU ARE NOT CAREFUL HERE, YOU WILL HAVE TO REDO THE CHALLENGE!
+        try:
+            update_result = db.execute(
+                f"UPDATE tables SET keepsake = {newkeep} "
+                f"WHERE keepsake = {curkeep} "
+                f"AND table_name = '{table}' "
+                f"AND leader = '{leader}'"
+            )
+        except sqlite3.Error as e:
+            return page + f"<p>The keepsake shot first! {e}</p>"
+
+        if update_result.rowcount <= 0:
+            return page + "<p>No matching table found!</p>"
+
+        result = db.execute(
+            "SELECT keepsake FROM tables WHERE table_name = ? AND leader = ?",
+            (table, leader)
+        ).fetchone()
+
+        if not result:
+            return page + "<p>No matching table found!</p>"
+
+        return page + f"<p>Your new keepsake is: {result['keepsake']}</p>"
+
+    return page
 
 app.secret_key = os.urandom(8)
 app.run("challenge.localhost", 365)

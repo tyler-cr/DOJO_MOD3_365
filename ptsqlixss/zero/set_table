@@ -1,0 +1,13 @@
+#!/usr/bin/exec-suid -- /usr/bin/python3 -I
+import sys
+from pwn import *
+
+if len(sys.argv) != 2:
+    print("""
+    set_table usage: please put your desired table set as an argument, and 
+                     we will automatically load it into your 'owners_table'
+                     (provide your html file as the argument!)
+    """)
+    exit()
+
+process(["cp", sys.argv[1], "/challenge/tables/owners_table"]).wait()

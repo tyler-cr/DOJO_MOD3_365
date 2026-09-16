@@ -4,15 +4,32 @@ import os
 import random
 import string
 
-file_name = ''.join(random.choices(string.ascii_lowercase, k=8))
+EVIL_USER_FILE = "/challenge/evil_user"
 
-evil_user = ''.join(random.choices(string.ascii_lowercase, k=8))
+def get_or_create_evil_user():
+    try:
+        with open(EVIL_USER_FILE, "r") as f:
+            evil_user = f.read().strip()
+            if evil_user:
+                return evil_user
+    except FileNotFoundError:
+        pass
 
+    evil_user = ''.join(random.choices(string.ascii_lowercase, k=8))
+
+    with open(EVIL_USER_FILE, "w") as f:
+        f.write(evil_user)
+        os.chmod(EVIL_USER_FILE, 0o400)
+    return evil_user
+
+EVIL_USER = get_or_create_evil_user()
 os.makedirs("/challenge/tables", exist_ok=True)
 
-with open(f"/challenge/{file_name}", "w") as file:
-    file.write(f"all your flag are belong to us... -- {evil_user}")
+with open(f"/challenge/strange_note", "w") as file:
+    file.write(f"all your flag are belong to us... -- {EVIL_USER}")
 
-os.chmod(f"/challenge/{file_name}", 0o400)
+os.chmod(__file__, 0o400)
+
+os.chmod(f"/challenge/strange_note", 0o400)
 
 os.remove(__file__)
