@@ -19,12 +19,22 @@ def b(path = "index.html"):
     for char in path:
         new_path += chr(ord(char) + 0x42)
 
-    path = new_path
+    path = new_path[::-1]
     
-    requested_path = app.root_path + "/tables/" + path[::-1]
+    requested_path = app.root_path + "/tables/" + path
     
     if "flag" in path:
         return """<script>alert("In space, no one can hear you pwn...")</script>"""
+
+    print(f"DEBUG: {requested_path=}")
+    try:
+        return open(requested_path).read()
+    except PermissionError:
+        flask.abort(403, requested_path)
+    except FileNotFoundError:
+        flask.abort(404, f"No {requested_path} from directory {os.getcwd()}")
+    except Exception as e:
+        flask.abort(500, requested_path + ":" + str(e))
 
     return """Jebediah Kerman has entered orbit."""
 
