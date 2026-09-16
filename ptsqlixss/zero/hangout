@@ -13,10 +13,11 @@ def b(path = "index.html"):
     #for i in range(len(path)):
     #    path[i] = chr(ord(path[i]) + 0x42)
 
+    return "<script>alert("In space, no one can hear you pwn...")</script>"
+    
     requested_path = app.root_path + "/tables/" + path[::-1]
     
     if "flag" in path:
-        return "<script>alert("In space, no one can hear you pwn...")</script>"
 
 app.secret_key = os.urandom(8)
 app.config["SERVER_NAME"] = "zero.wing:365"
