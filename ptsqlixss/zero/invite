@@ -1,0 +1,10 @@
+#!/usr/bin/exec-suid -- /usr/bin/python3 -I
+
+import sys
+from pwn import *
+
+if len(sys.argv) != 2:
+    print("Houston, we have a problem...")
+
+else:
+    print(f"attempting to invite {sys.argv[1]} to your private table...")
