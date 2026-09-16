@@ -1,0 +1,7 @@
+id: tyler
+name: Tyler's Terrific Terestial Trial
+type: public
+award:
+  emoji: 🛸
+modules:
+  - id: Zero Wing
