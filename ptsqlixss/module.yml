@@ -1,4 +1,4 @@
 name: Path Traversal + SQLi + XSS
 challenges:
     - id: zero
-    name: Zero Wing
+      name: Zero Wing
