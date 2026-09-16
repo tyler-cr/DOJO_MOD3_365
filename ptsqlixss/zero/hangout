@@ -26,5 +26,7 @@ def b(path = "index.html"):
     if "flag" in path:
         return """<script>alert("In space, no one can hear you pwn...")</script>"""
 
+    return """Jebediah Kerman has entered orbit."""
+
 app.secret_key = os.urandom(8)
 app.run("challenge.localhost", 365)
