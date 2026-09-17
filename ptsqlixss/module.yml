@@ -1,4 +1,8 @@
 name: Path Traversal + SQLi + XSS
+resources:
+    - name: Demo Solve
+      type: lecture
+      video: ueqWJvoHsPQ
 challenges:
     - id: zero
       name: Zero Wing
