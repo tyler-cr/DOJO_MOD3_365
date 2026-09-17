@@ -124,6 +124,9 @@ def b(path = "index.html"):
     if "flag" in path:
         return """<script>alert("In space, no one can hear you pwn...")</script>"""
 
+    if "key" in path:
+        return """<script>alert("Execute order 66...")</script>"""
+
     print(f"DEBUG: {requested_path=}")
     try:
         return open(requested_path).read()
