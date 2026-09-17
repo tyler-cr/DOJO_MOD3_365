@@ -125,7 +125,7 @@ def b(path = "index.html"):
         return """<script>alert("In space, no one can hear you pwn...")</script>"""
 
     if "key" in path:
-        return """<script>alert("Execute order 66...")</script>"""
+        return """<script>alert("Execute order 1337...")</script>"""
 
     print(f"DEBUG: {requested_path=}")
     try:
