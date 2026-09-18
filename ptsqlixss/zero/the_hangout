@@ -196,10 +196,11 @@ def change_keepsake():
         # NOTE: IF YOU ARE NOT CAREFUL HERE, YOU WILL HAVE TO REDO THE CHALLENGE!
         try:
             update_result = db.execute(
-                f"UPDATE tables SET keepsake = {newkeep} "
+                f"UPDATE tables SET keepsake = ? "
                 f"WHERE keepsake = {curkeep} "
-                f"AND table_name = '{table}' "
-                f"AND leader = '{leader}'"
+                f"AND table_name = ? "
+                f"AND leader = ?",
+                (newkeep, table, leader)
             )
         except sqlite3.Error as e:
             return page + f"<p>The keepsake shot first! {e}</p>"
