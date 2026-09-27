@@ -1,4 +1,4 @@
 name: Cryptography
 challenges:
-    - id: character_cryptography
+    - id: character-cryptography
       name: Character Cryptography
