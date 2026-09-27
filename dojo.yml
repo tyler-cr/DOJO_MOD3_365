@@ -5,3 +5,4 @@ award:
   emoji: 🛸
 modules:
   - id: ptsqlixss
+  - id: crypto
