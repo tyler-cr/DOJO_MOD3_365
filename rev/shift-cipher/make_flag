@@ -1,0 +1,21 @@
+#!/usr/bin/exec-suid -- /usr/bin/python3 -I
+
+import random
+
+with open("/flag", "rb") as f:
+    flag = f.read()
+
+random.seed(flag)
+
+min_val = 0x20
+max_val = 0x80
+
+r = random.randint(min_val, max_val)
+
+file_me = b""
+for char in flag:
+    file_me += char + r
+    r *= -1
+
+with open("flag_cipher.hex", "wb") as f:
+    f.write(file_me)
