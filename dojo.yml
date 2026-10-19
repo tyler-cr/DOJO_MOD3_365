@@ -1,9 +1,9 @@
 id: tyler
-name: Tyler's Terrific Terrestrial Trials
-type: private
+name: Tyler's Terrific Trials!
+type: public
 award:
   emoji: 🛸
 modules:
   - id: ptsqlixss
-modules
   - id: crypto
+  - id: rev
