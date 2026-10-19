@@ -2,7 +2,7 @@
 
 import random
 
-with open("/flag", "rb") as f:
+with open("/flag", "r") as f:
     flag = f.read()
 
 random.seed(flag)
@@ -18,4 +18,4 @@ for char in flag:
     r *= -1
 
 with open("flag_cipher.hex", "wb") as f:
-    f.write(file_me)
+    f.write(file_me.encode())
