@@ -3,7 +3,7 @@ name: Reverse Engineering
 challenges:
     - id: shift-cipher
       name: Shift Cipher 1 (python)
-    - id: shift-cipher-2
-      name: Shift Cipher 2 (C)
-    - id: spiral-cipher
-      name: Spiral Cipher (x86)
+    # - id: shift-cipher-2
+      # name: Shift Cipher 2 (C)
+    # - id: spiral-cipher
+      # name: Spiral Cipher (x86)
