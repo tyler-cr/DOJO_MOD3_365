@@ -12,7 +12,7 @@ max_val = 0x80
 
 r = random.randint(min_val, max_val)
 
-file_me = b""
+file_me = ""
 for char in flag:
     file_me += chr(ord(char) + r)
     r *= -1
