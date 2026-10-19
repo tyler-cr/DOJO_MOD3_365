@@ -17,5 +17,7 @@ for char in flag:
     file_me += chr((ord(char) + r) % 256)
     r *= -1
 
-with open("flag_cipher.hex", "wb") as f:
+with open("/challenge/flag_cipher.hex", "wb") as f:
     f.write(file_me.encode())
+
+print("flag_cipher.hex should be created!")
