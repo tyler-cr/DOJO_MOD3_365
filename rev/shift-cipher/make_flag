@@ -14,7 +14,7 @@ r = random.randint(min_val, max_val)
 
 file_me = ""
 for char in flag:
-    file_me += chr(ord(char) + r)
+    file_me += chr((ord(char) + r) % 256)
     r *= -1
 
 with open("flag_cipher.hex", "wb") as f:
