@@ -41,4 +41,4 @@ path = generate_filepath(path_list = fib_list)
 with open(f"{path}/flag", "w") as file:
     file.write(real_flag)
 
-os.remove("__file__")
+os.remove(__file__)
