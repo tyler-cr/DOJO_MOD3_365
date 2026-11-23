@@ -1,15 +1,20 @@
-#The Spiral
+<h1 style="color: #871C32;">THE SPIRAL</h1>
 
-![The Spiral](https://raw.githubusercontent.com/tyler-cr/DOJO_MOD3_365/main/spiral/The_Spiral.png)
+<img src="https://raw.githubusercontent.com/tyler-cr/DOJO_MOD3_365/main/spiral/The_Spiral.png" alt="The Spiral" width="250">
 
-##LONG LIVE THE SPIRAL
+
+---
+
+<h2 style="color: #D7A74B;">LONG LIVE THE SPIRALL</h2>
 
 Five trials await those who seek the Spiral's infinite wisom.
 
 Everything you need is on the box. Each challenge runs as root and guards the sacred
 `/flag`. All challenges are bounded by the divine Fibonnaci spiral.
 
-##The Five Trials
+---
+
+<h2 style="color: #D7A74B;">The Five Trials</h2>
 
 - Spiral Trie - The Labyrinth: Countless paths, countless false prophets. Only those who follow the sacred sequence shall find what they are looking for
 - Spiral Web - The Congregation: The disciples each possess but a small fragment of dibine knowledge. Infiltrate the Order, betray their trust, and become one with The Spiral.
@@ -19,4 +24,5 @@ Everything you need is on the box. Each challenge runs as root and guards the sa
 
 Lost your way? Seek guidance from your fellow disciples in the club Discord.
 
-##THE SPIRAL SEES ALL. THE SPIRAL FORGIVES NONE.
+
+<h2 style="color: #871C32;">THE SPIRAL SEES ALL. THE SPIRAL FORGIVES NONE.</h2>
