@@ -1,12 +1,12 @@
 name: The Spiral
 challenges:
-  - id: spiral_trie  
+  - id: spiral-trie  
     name: "[MISC]Spiral Trie"
-  - id: spiral_cipher
+  - id: spiral-cipher
     name: "[REV]Spiral Cipher"
-  - id: spiral_stack
+  - id: spiral-stack
     name: "[PWN]Spiral Stack"
-  - id: spiral_web
+  - id: spiral-web
     name: "[WEB]Spiral Web"
-  - id: spiral_brain
+  - id: spiral-brain
     name: "[REV]Spiral Brain"
