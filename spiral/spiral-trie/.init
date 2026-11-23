@@ -23,7 +23,7 @@ def fib_list(size: int = DEPTH):
         i += 1
     return retlist
 
-def generate_filepath(prefix = "maze/", path_list = []):
+def generate_filepath(prefix = "/challenge/maze/", path_list = []):
     path = prefix + "/".join(path_list)
     os.makedirs(path, exist_ok = True)
     return path
