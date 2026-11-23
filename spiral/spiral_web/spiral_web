@@ -1,0 +1,139 @@
+#!/usr/bin/env python
+
+import flask
+import os
+import sqlite3
+import tempfile
+import random
+import string
+app = flask.Flask(__name__)
+
+with open("/flag", "r") as file:
+    flag = file.read()
+
+def min_mod(n):
+    m = n
+
+    while True:
+        a, b = 0, 1
+        seen = set()
+
+        while (a, b) != (0, 1) or not seen:
+            seen.add(a)
+            a, b = b, (a + b) % m
+
+        if all(i in seen for i in range(n)):
+            return m
+
+        m += 1
+
+def fib_from_index(idx: int):
+    first, second = 0, 1
+    for i in range(idx):
+        first, second = second, first + second
+    return first
+
+class TemporaryDB:
+	def __init__(self):
+		self.db_file = tempfile.NamedTemporaryFile("x", suffix=".db")
+
+	def execute(self, sql, parameters=()):
+		connection = sqlite3.connect(self.db_file.name)
+		connection.row_factory = sqlite3.Row
+		cursor = connection.cursor()
+		result = cursor.execute(sql, parameters)
+		connection.commit()
+		return result
+
+db = TemporaryDB()
+
+db.execute("CREATE TABLE disciples (disciple TEXT, sacred_tag TEXT, oath TEXT)")
+
+mod = min_mod(len(flag))
+seen = set()
+i=0
+while len(seen) < len(flag):
+    idx = fib_from_index(i) % mod
+    
+    disciple = f"disciple_{i}"
+    oath = ''.join(random.choices(string.ascii_letters, k=20))
+    sacred_number = flag[idx] if idx < len(flag) else "The Spiral Has Declined This User"
+    db.execute("INSERT INTO disciples (disciple, sacred_tag, oath) VALUES (?, ?, ?)", (disciple, sacred_number, oath))
+    if idx < len(flag): seen.add(idx)
+    i += 1
+
+
+@app.route("/ascend", methods =["GET","POST"])
+def ascend():
+    if flask.request.method == "POST":
+        disciple_input = flask.request.form.get("disciple")
+        oath_input = flask.request.form.get("oath")
+
+        if not disciple_input or not oath_input:
+            flask.abort(400, "The Spiral requires knowledge!!")
+        
+        disciple = db.execute("SELECT * FROM disciples WHERE disciple = ?", (disciple_input,)).fetchone()
+        oath = db.execute("SELECT * FROM disciples WHERE oath = ?", (oath_input,)).fetchone()
+        if not disciple or not oath:
+            flask.abort(403, f"The spiral knows {disciple_input} is unfaithful!")
+        else:
+            flask.session["disciple"] = disciple["disciple"]
+            flask.session["sacred_tag"] = disciple["sacred_tag"]
+            return flask.redirect("/")
+
+    else:
+        return """
+            Ascend To The Spiral's Glory!
+            <form action='/ascend' method='post'>
+              Disciple:<input type=text name=disciple>
+              Oath:<input type=text name=oath>
+              <input type=submit name=submit value=Ascend>
+            </form><hr>
+
+            <form action='/awaken' method='get'>
+                Awaken
+                <input type=submit name=submit value=Awaken>
+            </form><hr>
+            """
+
+@app.route("/awaken", methods =["GET", "POST"])
+def awaken():
+    if flask.request.method == "POST":
+        disciple_input = flask.request.form.get("disciple")
+        oath_input = flask.request.form.get("oath")
+
+        if not disciple_input or not oath_input:
+            flask.abort(400, "The Spiral requires knowledge!")
+        
+        disciple = db.execute("SELECT * FROM disciples WHERE disciple = ?", (disciple_input,)).fetchone()
+        if disciple:
+            flask.abort(403, "The Spiral does not condone this trickery!")
+        else:
+            db.execute("INSERT into disciples (disciple, oath, sacred_tag) VALUES (?, ?, ?)", (disciple_input, oath_input, random.choice(string.printable)))
+            return flask.redirect("/ascend")
+
+    else: 
+        return """
+            Awaken Thyself For The Spiral To Bear Judgement!
+            <form action='/awaken' method='post'>
+              Disciple:<input type=text name=disciple>
+              Oath:<input type=text name=oath>
+              <input type=submit name=submit value=Awaken>
+            </form><hr>
+
+            <form action='/ascend' method='get'>
+                Ascend
+                <input type=submit name=submit value=Ascend>
+            </form><hr>
+            """
+
+@app.route("/", methods =["GET"])
+def beginning():
+    if flask.session.get("sacred_tag"): return flask.session["sacred_tag"]
+    else:
+        return flask.redirect("/ascend")
+
+
+app.secret_key = os.urandom(8)
+app.run("spiral_web.localhost", 4200)
+

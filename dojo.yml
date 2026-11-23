@@ -1,9 +1,10 @@
 id: tyler
 name: Tyler's Terrific Trials!
-type: public
+type: private
 award:
   emoji: 🛸
 modules:
   - id: ptsqlixss
   - id: crypto
   - id: rev
+  - id: spiral

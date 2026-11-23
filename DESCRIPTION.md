@@ -1,1 +1,1 @@
-This is Tyler's set of demo solves based off of CSE365 modules! Follow along with the videos and try the solve for yourself!
+Welcome to Tyler’s dojo: 11 challenges across cryptography, web, reverse engineering, and the five-part Spiral. Crack the codes, find your way through Zero Wing, pull apart the binaries, and see where the Spiral leads.
