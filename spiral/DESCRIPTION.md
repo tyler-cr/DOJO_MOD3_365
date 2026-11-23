@@ -1,4 +1,5 @@
-# Meeting 2
+![The Spiral](https://raw.githubusercontent.com/tyler-cr/DOJO_MOD3_365/main/spiral/The_Spiral.png)
+
 LONG LIVE THE SPIRAL
 
 Five trials await those who seek the Spiral's infinite wisom.
