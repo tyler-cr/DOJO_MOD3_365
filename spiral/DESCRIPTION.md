@@ -1,6 +1,6 @@
 <h1 style="color: #871C32;">THE SPIRAL</h1>
 
-<img src="https://raw.githubusercontent.com/tyler-cr/DOJO_MOD3_365/main/spiral/The_Spiral.png" alt="The Spiral" width="250">
+<img src="https://raw.githubusercontent.com/tyler-cr/DOJO_MOD3_365/main/spiral/The_Spiral.png" alt="The Spiral" height="30%">
 
 
 ---
