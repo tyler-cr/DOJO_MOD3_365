@@ -184,7 +184,7 @@ void challenge(){
 
 				fib_number = get_fib_num(fib_index) % 0x6a;
 
-				puts("The Spiral awaits your char you: ");
+				puts("The Spiral demands char: ");
 
 				if (read(STDIN_FILENO, &overwrite_char, 1) != 1){
 					puts(RED "Failed to read byte." RESET);
