@@ -4,9 +4,9 @@ challenges:
     name: "[MISC] Spiral Trie"
   - id: spiral-cipher
     name: "[REV] Spiral Cipher"
-  - id: spiral-stack
-    name: "[PWN] Spiral Stack"
   - id: spiral-web
     name: "[WEB] Spiral Web"
+  - id: spiral-stack
+    name: "[PWN] Spiral Stack"
   - id: spiral-brain
     name: "[REV] Spiral Brain"
