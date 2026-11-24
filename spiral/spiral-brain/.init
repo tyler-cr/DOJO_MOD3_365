@@ -1,0 +1,9 @@
+#!/usr/bin/env python
+import subprocess
+
+subprocess.run(
+    ["gcc", "/challenge/spiral_brain.c", "-o", "/challenge/spiral_stack", "-lm"],
+    check=True,
+)
+
+

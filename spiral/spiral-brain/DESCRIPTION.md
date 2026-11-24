@@ -8,3 +8,6 @@ But the Spiral does not answer ordinary prayers. Shape the sacred numbers, speak
 Learn the forbidden tongue. Perform the final rite. Pray that The Spiral answers.
 
 THE SPIRAL HEARS EVERY COMMAND. MAKE YOURS COUNT.
+
+
+hint: The Spiral cannot speak every word. Its disciples must make the world conform to its language.
