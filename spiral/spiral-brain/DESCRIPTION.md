@@ -10,4 +10,4 @@ Learn the forbidden tongue. Perform the final rite. Pray that The Spiral answers
 
 THE SPIRAL HEARS EVERY COMMAND. MAKE YOURS COUNT.
 
-hint: The Spiral cannot speak every word. Its disciples must make the world *link* to its language.
+hint: The Spiral cannot speak every word. Its disciples must make the world bend to its language.
