@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+import subprocess
+
+subprocess.run(
+    ["gcc", "-fno-stack-protector", "-no-pie" "/challenge/spiral_stack.c", "-o", "/challenge/spiral_stack"],
+    check=True,
+)
