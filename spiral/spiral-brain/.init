@@ -8,4 +8,4 @@ subprocess.run(
 )
 
 os.chown("/challenge/spiral_brain", 0, 0)
-os.chmod("/challenge/spiral_stack", 0o4755)
+os.chmod("/challenge/spiral_brain", 0o4755)
