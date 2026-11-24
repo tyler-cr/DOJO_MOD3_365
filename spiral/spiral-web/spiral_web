@@ -5,11 +5,64 @@ import os
 import sqlite3
 import tempfile
 import random
+import math
 import string
+from markupsafe import escape
 app = flask.Flask(__name__)
 
 with open("/flag", "r") as file:
     flag = file.read()
+
+
+def generate_spiral():
+    phi = (1 + math.sqrt(5)) / 2
+    points = []
+
+    for i in range(3000):
+        t = i / 3000 * 8 * math.pi
+        r = 450 * phi ** (2 * (t - 8 * math.pi) / math.pi)
+
+        x = 500 + r * math.cos(t)
+        y = 500 + r * math.sin(t)
+
+        points.append(f"{x:.2f},{y:.2f}")
+
+    return f"""
+        <svg class="spiral" viewBox="0 0 1000 1000">
+            <polyline
+                points="{' '.join(points)}"
+                fill="none"
+                stroke="#ffc627"
+                stroke-width="5"
+            />
+        </svg>
+    """
+
+spiral = generate_spiral()
+
+def render_page(content):
+    return f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>The Spiral</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <link rel="stylesheet" href="/static/spiral.css">
+        </head>
+        <body>
+            {spiral}
+            <main class="altar">
+                <h1>The Spiral</h1>
+                <hr>
+                {content}
+                <div class="whisper">
+                    All paths return to The Spiral
+                </div>
+            </main>
+        </body>
+        </html>
+    """
+
 
 def min_mod(n):
     m = n
@@ -81,20 +134,26 @@ def ascend():
             flask.session["sacred_tag"] = disciple["sacred_tag"]
             return flask.redirect("/")
 
-    else:
-        return """
-            Ascend To The Spiral's Glory!
-            <form action='/ascend' method='post'>
-              Disciple:<input type=text name=disciple>
-              Oath:<input type=text name=oath>
-              <input type=submit name=submit value=Ascend>
-            </form><hr>
 
-            <form action='/awaken' method='get'>
-                Awaken
-                <input type=submit name=submit value=Awaken>
-            </form><hr>
-            """
+    else:
+        return render_page("""
+            <h2>Ascend To The Spiral's Glory</h2>
+
+            <form action="/ascend" method="post">
+                Disciple
+                <input type="text" name="disciple" required>
+                Oath
+                <input type="password" name="oath" required>
+                <input type="submit" name="submit" value="Ascend">
+            </form>
+
+            <hr>
+
+            <form action="/awaken" method="get">
+                <input type="submit" name="submit" value="Awaken">
+            </form>
+        """)
+
 
 @app.route("/awaken", methods =["GET", "POST"])
 def awaken():
@@ -112,24 +171,41 @@ def awaken():
             db.execute("INSERT into disciples (disciple, oath, sacred_tag) VALUES (?, ?, ?)", (disciple_input, oath_input, random.choice(string.printable)))
             return flask.redirect("/ascend")
 
-    else: 
-        return """
-            Awaken Thyself For The Spiral To Bear Judgement!
-            <form action='/awaken' method='post'>
-              Disciple:<input type=text name=disciple>
-              Oath:<input type=text name=oath>
-              <input type=submit name=submit value=Awaken>
-            </form><hr>
 
-            <form action='/ascend' method='get'>
-                Ascend
-                <input type=submit name=submit value=Ascend>
-            </form><hr>
-            """
+    else:
+        return render_page("""
+            <h2>Awaken Thyself For The Spiral To Bear Judgement</h2>
 
-@app.route("/", methods =["GET"])
+            <form action="/awaken" method="post">
+                Disciple
+                <input type="text" name="disciple" required>
+                Oath
+                <input type="password" name="oath" required>
+                <input type="submit" name="submit" value="Awaken">
+            </form>
+
+            <hr>
+
+            <form action="/ascend" method="get">
+                <input type="submit" name="submit" value="Ascend">
+            </form>
+        """)
+
+
+@app.route("/", methods=["GET"])
 def beginning():
-    if flask.session.get("sacred_tag"): return flask.session["sacred_tag"]
+    if flask.session.get("sacred_tag"):
+        return render_page("""
+            <h2>The Spiral Has Spoken</h2>
+
+            <div class="sacred-tag" id="sacred_tag">{}</div>
+
+            <hr>
+
+            <form action="/ascend" method="get">
+                <input type="submit" value="Return">
+            </form>
+        """.format(escape(flask.session["sacred_tag"])))
     else:
         return flask.redirect("/ascend")
 

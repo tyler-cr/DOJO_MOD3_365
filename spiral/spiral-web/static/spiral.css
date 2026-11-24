@@ -1,0 +1,179 @@
+/* The Spiral promises there is nothing to be seen here */
+
+
+:root {
+    --maroon: #8c1d40;
+    --gold: #ffc627;
+    --dark: #100409;
+    --blood: #410b1c;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(
+        ellipse at center,
+        #410b1c 0%,
+        #19060d 50%,
+        #080205 100%
+    );
+    color: var(--gold);
+    font-family: Georgia, serif;
+    overflow-x: hidden;
+}
+
+.spiral {
+    position: fixed;
+    width: 90vmin;
+    height: 90vmin;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: rotate 45s linear infinite;
+    opacity: 0.18;
+    pointer-events: none;
+    filter: drop-shadow(0 0 12px var(--gold));
+}
+
+.altar {
+    position: relative;
+    z-index: 1;
+    width: min(480px, 90vw);
+    padding: 45px;
+    background: rgba(20, 3, 10, 0.93);
+    border: 1px solid var(--gold);
+    box-shadow:
+        0 0 35px #8c1d4080,
+        inset 0 0 35px #8c1d4030;
+    text-align: center;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: normal;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    text-shadow: 0 0 18px var(--gold);
+}
+
+h2 {
+    font-size: 17px;
+    font-weight: normal;
+    letter-spacing: 3px;
+    line-height: 1.7;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 25px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 13px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 13px;
+    background: #100409;
+    border: 1px solid var(--maroon);
+    color: var(--gold);
+    font-family: monospace;
+    font-size: 16px;
+    outline: none;
+    transition: 0.3s;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 15px #ffc62740;
+}
+
+input[type="submit"] {
+    padding: 14px;
+    background: var(--maroon);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: Georgia, serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+input[type="submit"]:hover {
+    background: var(--gold);
+    color: var(--dark);
+    box-shadow: 0 0 25px #ffc62780;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    margin: 30px 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--gold),
+        transparent
+    );
+}
+
+.sacred-tag {
+    font-family: monospace;
+    font-size: clamp(28px, 12vw, 100px);
+    overflow-wrap: anywhere;
+    color: var(--gold);
+    animation: float 4s ease-in-out infinite;
+    text-shadow:
+        0 0 10px var(--gold),
+        0 0 30px var(--gold),
+        0 0 60px var(--maroon);
+}
+
+.whisper {
+    margin-top: 30px;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    opacity: 0.5;
+}
+
+@keyframes rotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(-12px);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(12px);
+        opacity: 1;
+    }
+}
+
+::selection {
+    background: var(--gold);
+    color: var(--maroon);
+}
+
+
+/* The Spiral says, "I told you so" */
