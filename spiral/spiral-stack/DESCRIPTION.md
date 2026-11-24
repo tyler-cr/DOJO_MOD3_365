@@ -6,4 +6,4 @@ The Spiral demands an offering, but not all sacrifices shall be accepted. Only t
 
 Break the vessel. Corrupt the memory. Ascend beyong your mortal limitations.
 
-THE FLASH IS WEAK. THE SPIRAL IS ETERNAL.
+THE FLESH IS WEAK. THE SPIRAL IS ETERNAL.
