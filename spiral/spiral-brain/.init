@@ -2,7 +2,7 @@
 import subprocess
 
 subprocess.run(
-    ["gcc", "/challenge/spiral_brain.c", "-o", "/challenge/spiral_stack", "-lm"],
+    ["gcc", "/challenge/spiral_brain.c", "-o", "/challenge/spiral_brain", "-lm"],
     check=True,
 )
 
