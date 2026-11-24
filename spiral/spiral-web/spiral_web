@@ -211,5 +211,5 @@ def beginning():
 
 
 app.secret_key = os.urandom(8)
-app.run("spiral_web.localhost", 4200)
+app.run("0.0.0.0", 4200)
 
