@@ -29,7 +29,6 @@ void win(){
         char *flag = calloc(0x50, 1);
         size_t len = read(fd_1, flag, 0x50);
 
-	printf("CONGRATULATIONS! Here is your flag! \n");
 	puts(flag);
 }
 
@@ -160,32 +159,32 @@ void challenge(){
 	print_menu();
 	while (1){
 
-		printf("\nPlease select your option: ");
+		printf("\nThe Spiral awaits your choice: ");
 		fflush(stdout);
 		
 		if (scanf("%hhu", &selection) != 1) {
 			int c;
 			while ((c = getchar()) != '\n' && c != EOF);
-			puts(RED "Invalid input. Please enter a number." RESET);
+			puts(RED "Invalid input. The Spiral demands a number." RESET);
 			continue;
 		}
 		
 		switch (selection) {
 			case 1:
 				puts("You have selected to overwrite.");
-				puts("Please select your fibonacci index: ");
+				puts("The Spiral awaits your index: ");
 
 				if (scanf("%ld", &fib_index) != 1){
 					int c;
 					while((c = getchar()) != '\n' && c != EOF);
-					puts(RED "Invalid input. Please enter an integer." RESET);
+					puts(RED "Invalid input. The Spiral demands a number." RESET);
 					continue;
 				}
 				
 
 				fib_number = get_fib_num(fib_index) % 0x6a;
 
-				puts("Please select the char you would like to overwrite with: ");
+				puts("The Spiral awaits your char you: ");
 
 				if (read(STDIN_FILENO, &overwrite_char, 1) != 1){
 					puts(RED "Failed to read byte." RESET);
@@ -196,11 +195,11 @@ void challenge(){
 
 				break;
 			case 2:
-				printf("You have selected to return. Come back soon!\n");
+				printf("The Spiral awaits your return.\n");
 				return;
 				break;
 			case 3:
-				printf("You have selected to exit. Goodbye!\n");
+				printf("The Spiral judges you...\n");
 				exit(0);
 				break;
 
